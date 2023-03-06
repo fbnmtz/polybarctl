@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: polybarctl (vundefined)
+# File...: polybar.lib
+# Created: Monday, 2023/03/06 - 01:29:51
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Monday, 2023/03/06 - 02:28:33
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.74
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+_xLIB_POLYBAR__=true
+
+PHOME="$HOME/.config/polybar"
+
+xrequirements mkdir mv rm
+
+pInstall(){
+  local themes_repo=https://github.com/adi1090x/polybar-themes
+  local tmp=/tmp/polybar-themes
+  
+  if [ ! -d "$PHOME/themes" ]; then
+    echo -e "creating themes dir"
+    mkdir -p "$PHOME/themes"
+    
+    echo -e "downloading themes"
+    git clone "$themes_repo" "$tmp"
+    mv $tmp/simple/* "$PHOME"/themes 
+    mv $tmp/wallpapers "$PHOME"/
+    
+    echo -e "install fonts"
+    mv $tmp/fonts/* "$HOME/.local/fonts/"
+
+    echo -e "remove temporary files"
+    rm -rf $tmp
+  else 
+    echo -e "${RED}Error! 'polybar-themes' already installed${RESET}"
+  fi
+}
+
+pList(){
+  THEMES=$(ls "$PHOME/themes")
+  echo -e "\n${BLUE}-> Available themes:${RESET}"
+  for t in $THEMES; do
+    echo -e "   * ${YELLOW}$t${RESET}"
+  done
+}
+
+pRemove(){
+  rm -rf "$PHOME"
+}
