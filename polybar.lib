@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/03/06 - 02:28:33
+# Last Modified: Monday, 2023/03/06 - 02:41:57
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.74
+# Version: 0.0.2.84
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -47,8 +47,9 @@ pInstall(){
 }
 
 pList(){
-  THEMES=$(ls "$PHOME/themes")
-  echo -e "\n${BLUE}-> Available themes:${RESET}"
+  local cmd="ls --hide launch.sh $PHOME/themes"
+  THEMES=$($cmd)
+  echo -e "\n${BLUE}-> Available themes: ${GREEN}($($cmd | wc -l))${RESET}"
   for t in $THEMES; do
     echo -e "   * ${YELLOW}$t${RESET}"
   done
