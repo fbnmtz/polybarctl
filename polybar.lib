@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/03/06 - 02:48:28
+# Last Modified: Tuesday, 2023/03/07 - 00:57:08
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.88
+# Version: 0.0.4.90
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -60,5 +60,9 @@ pUninstall(){
 }
 
 pQuit(){
-  pkillall polybar
+  # Terminate already running bar instances
+	killall -q polybar
+
+	# Wait until the processes have been shut down
+	while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 }
