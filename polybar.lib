@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/03/07 - 00:57:08
+# Last Modified: Wednesday, 2023/03/08 - 05:08:20
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.4.90
+# Version: 0.0.5.177
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -17,26 +17,32 @@
 # HISTORY:
 #
 
-_xLIB_POLYBAR__=true
+_xLIB_POLYBAR_=true
 
 PHOME="$HOME/.config/polybar"
 
-xrequirements mkdir mv rm
+xrequirements mkdir mv rm touch ls cat
+
+is_installed(){
+  [ -f "$PHOME/polybarctl" ] && return 0 || return 1
+}
 
 pInstall(){
   local themes_repo=https://github.com/adi1090x/polybar-themes
   local tmp=/tmp/polybar-themes
   
-  if [ ! -d "$PHOME/themes" ]; then
-    echo -e "creating themes dir"
-    mkdir -p "$PHOME/themes"
+  if [ ! -f "$PHOME/polybarctl" ]; then
+    echo -e "installing polybarctl"
+    touch "$PHOME"/polybarctl
     
     echo -e "downloading themes"
     git clone "$themes_repo" "$tmp"
-    mv $tmp/simple/* "$PHOME"/themes 
-    mv $tmp/wallpapers "$PHOME"/
+    ls -d $tmp/simple/* > "$PHOME"/polybarctl
+    mv $tmp/simple/* "$PHOME"/ 
+    mv $tmp/wallpapers/ "$PHOME"/
     
     echo -e "install fonts"
+    [ ! -d "$HOME/.local/fonts" ] && mkdir -p "$HOME"/.local/fonts
     mv $tmp/fonts/* "$HOME/.local/fonts/"
 
     echo -e "remove temporary files"
@@ -47,16 +53,27 @@ pInstall(){
 }
 
 pList(){
-  local cmd="ls --hide launch.sh $PHOME/themes"
-  THEMES=$($cmd)
-  echo -e "\n${BLUE}-> Available themes: ${GREEN}($($cmd | wc -l))${RESET}"
-  for t in $THEMES; do
-    echo -e "   * ${YELLOW}$t${RESET}"
-  done
+  local cmd="cat $PHOME/polybarctl"
+  if is_installed; then
+    THEMES=$($cmd)
+    echo -e "\n${BLUE}-> Available themes: ${GREEN}($($cmd | wc -l))${RESET}"
+    for t in $THEMES; do
+      echo -e "   * ${YELLOW}$(echo $t | rev | cut -d '/' -f1 | rev)${RESET}"
+    done
+  else
+    echo -e "${RED}Error! themes not installed yet.${RESET}"
+  fi
 }
 
 pUninstall(){
-  rm -rf "$PHOME/{themes/wallpapers}"
+  if is_installed; then
+    for item in $(cat "$PHOME/polybarctl | rev | cut -d '/' -f1 | rev"); do
+      rm -rf $item
+    done
+    rm -rf "$PHOME/{themes,wallpapers,polybarctl}"
+  else
+    echo -e "${RED}Error! Unable to uninstall (not installed).${RESET}"
+  fi
 }
 
 pQuit(){
@@ -65,4 +82,27 @@ pQuit(){
 
 	# Wait until the processes have been shut down
 	while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+}
+
+pRun(){
+  local theme=$1
+  
+  _theme_exists(){
+    [ -d "$PHOME/$theme" ] && return 0 || return 1
+  }
+  
+  _get_bars(){
+    grep "bar/" $PHOME/$theme/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
+  }
+  
+
+  if _theme_exists "$theme"; then
+    pQuit
+    echo -e "starting bars:\n'$(_get_bars)"
+    for bar in $(_get_bars); do
+      polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini &
+    done
+  else
+    echo -e "${RED}Error! theme $theme not found.${RESET}"
+  fi
 }
