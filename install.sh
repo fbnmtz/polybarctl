@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/03/09 - 21:34:21
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/03/11 - 17:41:20
+# Last Modified: Sunday, 2023/03/12 - 22:48:42
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.4.8
+# Version: 0.0.4.9
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -22,7 +22,7 @@ username=fbnmtz
 repo=polybarctl
 
 if [ ! -d ~/bin/xSHELL ] || [ ! -L ~/bin/xSHELL ]; then
-    curl -sSL https://raw.githubusercontent.com/fbnmtz/xSHELL/master/install.sh | bash 
+    curl -sSL https://raw.githubusercontent.com/fbnmtz/xSHELL/master/install | bash 
 fi
 
 if [ ! -d ~/bin/xSHELL/packages/${repo} ] || [ ! -L ~/bin/xSHELL/packages/${repo} ]; then
