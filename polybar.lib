@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/03/08 - 05:08:20
+# Last Modified: Monday, 2023/03/13 - 01:27:01
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.5.177
+# Version: 0.0.6.206
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -86,13 +86,30 @@ pQuit(){
 
 pRun(){
   local theme=$1
+  local ttype=''
+  local filename=''
   
   _theme_exists(){
-    [ -d "$PHOME/$theme" ] && return 0 || return 1
+    [ -d "$PHOME/$theme" ] && { 
+      ttype=dir
+      return 0 
+    } || {
+      filename="$(echo $theme | cut -d '/' -f2)"
+      [ -f "$PHOME/panels/panel/$filename.ini" ] && {
+        ttype=file
+        return 0
+      } || {
+        return 1
+      }
+    }
   }
   
   _get_bars(){
-    grep "bar/" $PHOME/$theme/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
+    case "$ttype" in
+      dir ) grep "bar/" $PHOME/$theme/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']'  ;; 
+      file) grep "bar/" "$PHOME/panels/panel/$filename.ini" | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
+      
+    esac
   }
   
 
@@ -100,7 +117,10 @@ pRun(){
     pQuit
     echo -e "starting bars:\n'$(_get_bars)"
     for bar in $(_get_bars); do
-      polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini &
+      case "$ttype" in
+        dir ) polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini     &  ;;
+        file) polybar -q "$bar" -c "$PHOME/panels/panel/$filename.ini" &  ;;
+      esac
     done
   else
     echo -e "${RED}Error! theme $theme not found.${RESET}"
