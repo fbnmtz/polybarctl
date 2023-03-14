@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/03/13 - 01:27:01
+# Last Modified: Monday, 2023/03/13 - 23:26:51
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.6.206
+# Version: 0.0.7.272
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -53,12 +53,36 @@ pInstall(){
 }
 
 pList(){
-  local cmd="cat $PHOME/polybarctl"
+  # function to print a formatted msg
+  print_msg(){
+    local text=$1; local selected_color=${2:-$YELLOW}
+    echo -e "   * ${selected_color} $1${RESET}"
+  }
+
+  # get last item on a line sepated by '/'
+  last_item(){
+    echo $1 | rev | cut -d '/' -f1 | rev
+  }
+  
+  # cmd to list all saved themes
+  local cmd="cat $PHOME/polybarctl | grep -v 'launch.sh'"
+  
+  # check if polybarctl is already installed
   if is_installed; then
-    THEMES=$($cmd)
-    echo -e "\n${BLUE}-> Available themes: ${GREEN}($($cmd | wc -l))${RESET}"
+
+    THEMES=$(eval "$cmd" 2> /dev/null)
+    print_msg "\n${BLUE}-> Available themes: ${GREEN}($( eval $cmd | wc -l))${RESET}"
+    
     for t in $THEMES; do
-      echo -e "   * ${YELLOW}$(echo $t | rev | cut -d '/' -f1 | rev)${RESET}"
+      _current_theme=$(last_item $t)
+      if [ "$_current_theme" != "panels" ]; then
+        print_msg $_current_theme
+      else
+        print_msg $_current_theme
+        for p in "$PHOME/$_current_theme"/panel/*; do
+          print_msg " \`-> $(last_item ${p//.ini/})"
+        done
+      fi
     done
   else
     echo -e "${RED}Error! themes not installed yet.${RESET}"
