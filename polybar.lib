@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/03/13 - 23:26:51
+# Last Modified: Tuesday, 2023/03/14 - 00:28:34
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.7.272
+# Version: 0.0.8.277
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -56,7 +56,7 @@ pList(){
   # function to print a formatted msg
   print_msg(){
     local text=$1; local selected_color=${2:-$YELLOW}
-    echo -e "   * ${selected_color} $1${RESET}"
+    echo -e "${selected_color} $1${RESET}"
   }
 
   # get last item on a line sepated by '/'
@@ -76,11 +76,11 @@ pList(){
     for t in $THEMES; do
       _current_theme=$(last_item $t)
       if [ "$_current_theme" != "panels" ]; then
-        print_msg $_current_theme
+        print_msg " * $_current_theme"
       else
-        print_msg $_current_theme
+        print_msg " * $_current_theme"
         for p in "$PHOME/$_current_theme"/panel/*; do
-          print_msg " \`-> $(last_item ${p//.ini/})"
+          print_msg "   \`-> $(last_item ${p//.ini/})" $CYAN
         done
       fi
     done
