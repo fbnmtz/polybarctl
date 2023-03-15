@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/03/14 - 00:28:34
+# Last Modified: Wednesday, 2023/03/15 - 19:48:19
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.8.277
+# Version: 0.0.9.298
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -55,13 +55,14 @@ pInstall(){
 pList(){
   # function to print a formatted msg
   print_msg(){
+    # shellcheck disable=2034   # declare and assing var
     local text=$1; local selected_color=${2:-$YELLOW}
     echo -e "${selected_color} $1${RESET}"
   }
 
   # get last item on a line sepated by '/'
   last_item(){
-    echo $1 | rev | cut -d '/' -f1 | rev
+    echo "$1" | rev | cut -d '/' -f1 | rev
   }
   
   # cmd to list all saved themes
@@ -71,16 +72,16 @@ pList(){
   if is_installed; then
 
     THEMES=$(eval "$cmd" 2> /dev/null)
-    print_msg "\n${BLUE}-> Available themes: ${GREEN}($( eval $cmd | wc -l))${RESET}"
+    print_msg "\n${BLUE}-> Available themes: ${GREEN}($( eval "$cmd" | wc -l))${RESET}"
     
     for t in $THEMES; do
-      _current_theme=$(last_item $t)
+      _current_theme=$(last_item "$t")
       if [ "$_current_theme" != "panels" ]; then
         print_msg " * $_current_theme"
       else
         print_msg " * $_current_theme"
         for p in "$PHOME/$_current_theme"/panel/*; do
-          print_msg "   \`-> $(last_item ${p//.ini/})" $CYAN
+          print_msg "   \`-> $(last_item "${p//.ini/}")" "$CYAN"
         done
       fi
     done
@@ -92,7 +93,7 @@ pList(){
 pUninstall(){
   if is_installed; then
     for item in $(cat "$PHOME/polybarctl | rev | cut -d '/' -f1 | rev"); do
-      rm -rf $item
+      rm -rf "$item"
     done
     rm -rf "$PHOME/{themes,wallpapers,polybarctl}"
   else
@@ -114,24 +115,26 @@ pRun(){
   local filename=''
   
   _theme_exists(){
-    [ -d "$PHOME/$theme" ] && { 
-      ttype=dir
+    if [ -d "$PHOME/$theme" ]; then 
+      ttype=d
+      true
       return 0 
-    } || {
-      filename="$(echo $theme | cut -d '/' -f2)"
-      [ -f "$PHOME/panels/panel/$filename.ini" ] && {
-        ttype=file
+    else
+      filename="$(echo "$theme" | cut -d '/' -f2)"
+      if [ -f "$PHOME/panels/panel/$filename.ini" ]; then
+        ttype=f
+        true
         return 0
-      } || {
+      else
         return 1
-      }
-    }
+      fi
+    fi
   }
   
   _get_bars(){
     case "$ttype" in
-      dir ) grep "bar/" $PHOME/$theme/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']'  ;; 
-      file) grep "bar/" "$PHOME/panels/panel/$filename.ini" | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
+      d) grep "bar/" "$PHOME/$theme"/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']'  ;; 
+      f) grep "bar/" "$PHOME/panels/panel/$filename.ini" | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
       
     esac
   }
