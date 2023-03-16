@@ -20,7 +20,7 @@
 
 # polybarctl
 
-Simple script to manage polybar themes/configs
+Simple script to install/run polybar [themes created by @adi1090x](https://github.com/adi1090x/polybar-themes)  
 
 ## requirements:
 
