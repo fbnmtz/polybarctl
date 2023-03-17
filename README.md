@@ -20,11 +20,11 @@
 
 # polybarctl
 
-Simple script to install/run polybar [themes created by @adi1090x](https://github.com/adi1090x/polybar-themes)  
+Simple script to install/run [polybar themes created by @adi1090x](https://github.com/adi1090x/polybar-themes)  
 
 ## requirements:
 
-* [xSHELL](https://github.com/fbnmtz/xSHELL), git, polybar
+* [xSHELL](https://github.com/fbnmtz/xSHELL), [git](https://github.com/git/git), [polybar](https://github.com/polybar/polybar)
 
 ## Install:
 
