@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/03/15 - 19:48:19
+# Last Modified: Friday, 2023/03/17 - 19:49:43
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.9.298
+# Version: 0.0.10.304
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -135,18 +135,17 @@ pRun(){
     case "$ttype" in
       d) grep "bar/" "$PHOME/$theme"/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']'  ;; 
       f) grep "bar/" "$PHOME/panels/panel/$filename.ini" | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
-      
     esac
   }
   
 
   if _theme_exists "$theme"; then
     pQuit
-    echo -e "starting bars:\n'$(_get_bars)"
+    echo -e "starting bars:\n'$(_get_bars)'"
     for bar in $(_get_bars); do
       case "$ttype" in
-        dir ) polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini     &  ;;
-        file) polybar -q "$bar" -c "$PHOME/panels/panel/$filename.ini" &  ;;
+        d) polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini &         ;;
+        f) polybar -q "$bar" -c "$PHOME/panels/panel/$filename.ini" &  ;;
       esac
     done
   else
