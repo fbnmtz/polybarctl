@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/03/17 - 19:49:43
+# Last Modified: Friday, 2023/03/17 - 19:59:31
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.10.304
+# Version: 0.0.11.318
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -92,10 +92,15 @@ pList(){
 
 pUninstall(){
   if is_installed; then
-    for item in $(cat "$PHOME/polybarctl | rev | cut -d '/' -f1 | rev"); do
-      rm -rf "$item"
+    local toRemove=$(cat "$PHOME/polybarctl" | rev | cut -d '/' -f1 | rev)
+    for item in $toRemove; do
+      echo "rm -rf $PHOME/$item"
+      rm -rf "$PHOME/$item"
     done
-    rm -rf "$PHOME/{themes,wallpapers,polybarctl}"
+    for item in themes wallpapers polybarctl; do
+      rm -rf "$PHOME/$item"
+    done
+    echo "$APP: themes uninstalled"
   else
     echo -e "${RED}Error! Unable to uninstall (not installed).${RESET}"
   fi
