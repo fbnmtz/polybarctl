@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/03/17 - 19:59:31
+# Last Modified: Saturday, 2023/03/18 - 18:13:16
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.11.318
+# Version: 0.0.12.326
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -21,7 +21,7 @@ _xLIB_POLYBAR_=true
 
 PHOME="$HOME/.config/polybar"
 
-xrequirements mkdir mv rm touch ls cat
+xrequirements mkdir mv rm touch ls cat rev cut killall pgrep wc grep tr
 
 is_installed(){
   [ -f "$PHOME/polybarctl" ] && return 0 || return 1
