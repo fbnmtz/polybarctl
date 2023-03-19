@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/03/19 - 15:37:17
+# Last Modified: Sunday, 2023/03/19 - 15:57:21
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.13.350
+# Version: 0.0.14.362
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -143,25 +143,31 @@ pRun(){
     esac
   }
   
-  # this is a valid theme?
-  if _theme_exists "$theme"; then
-    # kill all polybar instances
-    pQuit
-    echo -e "starting bars:\n'$(_get_bars)'"
-    # run all bars defined in theme
-    for bar in $(_get_bars); do
-      case "$ttype" in
-        d) polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini &         ;;
-        f) polybar -q "$bar" -c "$PHOME/panels/panel/$subtheme.ini" &  ;;
-      esac
-    done
+  # themes installed?
+  if is_installed; then
+    # this is a valid theme?
+    if _theme_exists "$theme"; then
+      # kill all polybar instances
+      pQuit
+      echo -e "starting bars:\n'$(_get_bars)'"
+      # run all bars defined in theme
+      for bar in $(_get_bars); do
+        case "$ttype" in
+          d) polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini &         ;;
+          f) polybar -q "$bar" -c "$PHOME/panels/panel/$subtheme.ini" &  ;;
+        esac
+      done
+    else
+        echo -e "${RED}Error! theme '$theme' not found.${RESET}"
+    fi
   else
     # is a file? try to run polybar
     if [ -f "$theme" ]; then
       polybar -c "$theme" "$bar" &
     else
       # not a valid file either? Write error message
-      echo -e "${RED}Error! theme $theme not found.${RESET}"
+      echo -e "${RED}Error! Themes isn't installed. Configfile '$theme' not found.${RESET}"
     fi
   fi
+  
 }
