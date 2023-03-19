@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:14:37
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/03/08 - 05:08:33
+# Last Modified: Sunday, 2023/03/19 - 15:25:59
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.4.41
+# Version: 0.0.5.56
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -32,11 +32,11 @@ use args polybar.lib
 xrequirements git polybar
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-xarg --id -i,--install    --var action:i         --desc "install polybar themes (by adi1090x)"
-xarg --id -l,--list       --var action:l         --desc "list available themes"
-xarg --id -r,--run        --var action:r,theme+r --desc "run selected <theme>"
-xarg --id -q,--quit       --var action:q         --desc "quit all polybar instances"
-xarg --id -u,--uninstall  --var action:u         --desc "uninstall polybar themes"
+xarg --id -i,--install    --var action:i               --desc "install polybar themes (by adi1090x)"
+xarg --id -l,--list       --var action:l               --desc "list available themes"
+xarg --id -r,--run        --var action:r,theme+r,bar+o --desc "run one available <theme> or a given config_file (<bar> is optional when using a custom config file)"
+xarg --id -q,--quit       --var action:q               --desc "quit all polybar instances"
+xarg --id -u,--uninstall  --var action:u               --desc "uninstall polybar themes"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 xrun --xreject-unknow --xrequire-one --xcolors --xversionrc "$@"

@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/03/18 - 18:13:16
+# Last Modified: Sunday, 2023/03/19 - 15:37:17
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.12.326
+# Version: 0.0.13.350
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -115,9 +115,9 @@ pQuit(){
 }
 
 pRun(){
-  local theme=$1
-  local ttype=''
-  local filename=''
+  local theme=$1    # current theme
+  local ttype=''    # theme type (dir or file) -> panels theme
+  local subtheme='' # used to run subitems -> panels theme
   
   _theme_exists(){
     if [ -d "$PHOME/$theme" ]; then 
@@ -125,8 +125,8 @@ pRun(){
       true
       return 0 
     else
-      filename="$(echo "$theme" | cut -d '/' -f2)"
-      if [ -f "$PHOME/panels/panel/$filename.ini" ]; then
+      subtheme="$(echo "$theme" | cut -d '/' -f2)"
+      if [ -f "$PHOME/panels/panel/$subtheme.ini" ]; then
         ttype=f
         true
         return 0
@@ -139,21 +139,29 @@ pRun(){
   _get_bars(){
     case "$ttype" in
       d) grep "bar/" "$PHOME/$theme"/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']'  ;; 
-      f) grep "bar/" "$PHOME/panels/panel/$filename.ini" | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
+      f) grep "bar/" "$PHOME/panels/panel/$subtheme.ini" | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
     esac
   }
   
-
+  # this is a valid theme?
   if _theme_exists "$theme"; then
+    # kill all polybar instances
     pQuit
     echo -e "starting bars:\n'$(_get_bars)'"
+    # run all bars defined in theme
     for bar in $(_get_bars); do
       case "$ttype" in
         d) polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini &         ;;
-        f) polybar -q "$bar" -c "$PHOME/panels/panel/$filename.ini" &  ;;
+        f) polybar -q "$bar" -c "$PHOME/panels/panel/$subtheme.ini" &  ;;
       esac
     done
   else
-    echo -e "${RED}Error! theme $theme not found.${RESET}"
+    # is a file? try to run polybar
+    if [ -f "$theme" ]; then
+      polybar -c "$theme" "$bar" &
+    else
+      # not a valid file either? Write error message
+      echo -e "${RED}Error! theme $theme not found.${RESET}"
+    fi
   fi
 }
