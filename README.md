@@ -43,15 +43,16 @@ usage:
   polybarctl [-i] [-l] [-r <theme>] [-q] [-u] [-h] [-v]
 
 -> Available Options:
-   -i,  --install       install polybar themes (by adi1090x)
-   -l,  --list          list available themes
-   -r,  --run <theme>   run selected <theme>
-   -q,  --quit          quit all polybar instances
-   -u,  --uninstall     uninstall polybar themes
-   -h,  --help          show this help
-   -v,  --version       print version and exit
+   -i,  --install           install polybar themes (by adi1090x)
+   -l,  --list              list available themes
+   -r,  --run <theme> <bar> run one available <theme> or a given config_file (<bar> is optional when using a custom config file)
+   -q,  --quit              quit all polybar instances
+   -u,  --uninstall         uninstall polybar themes
+   -h,  --help              show this help
+   -v,  --version           print version and exit
 
-v0.0.4-rc41 - writen by @fbnmtz 2023
+v0.0.5-rc56 - writen by @fbnmtz 2023
+
 
 ```
 
