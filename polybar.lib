@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/03/19 - 15:57:21
+# Last Modified: Sunday, 2023/03/19 - 22:55:52
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.14.362
+# Version: 0.0.15.403
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -115,9 +115,11 @@ pQuit(){
 }
 
 pRun(){
-  local theme=$1    # current theme
-  local ttype=''    # theme type (dir or file) -> panels theme
-  local subtheme='' # used to run subitems -> panels theme
+  local theme=$1       # current theme
+  local theme_bars=''  # bars in this theme
+  local ttype=''       # theme type (dir or file) -> panels theme
+  local subtheme=''    # used to run subitems -> panels theme
+  local config_file='' # polybar config file
   
   _theme_exists(){
     if [ -d "$PHOME/$theme" ]; then 
@@ -137,11 +139,18 @@ pRun(){
   }
   
   _get_bars(){
+    # command to get all bars in a polybar configfile
+    local _cmd="grep 'bar/' <file> | grep -v '=' | cut -d '/' -f2 | tr -d ']'"
+
+    # replace '<file>' with theme config 
     case "$ttype" in
-      d) grep "bar/" "$PHOME/$theme"/config.ini | grep -v '=' | cut -d '/' -f2 | tr -d ']'  ;; 
-      f) grep "bar/" "$PHOME/panels/panel/$subtheme.ini" | grep -v '=' | cut -d '/' -f2 | tr -d ']' 
+      d) _cmd=${_cmd/<file>/$PHOME\/$theme\/config.ini}           ;;
+      f) _cmd=${_cmd/<file>/$PHOME\/panels\/panel\/$subtheme.ini}  ;;
     esac
+    eval "$_cmd"
   }
+
+  local error_msg="";
   
   # themes installed?
   if is_installed; then
@@ -149,25 +158,32 @@ pRun(){
     if _theme_exists "$theme"; then
       # kill all polybar instances
       pQuit
-      echo -e "starting bars:\n'$(_get_bars)'"
+      theme_bars=$(_get_bars)
+      echo -e "starting bars:\n'$theme_bars'"
       # run all bars defined in theme
-      for bar in $(_get_bars); do
+      for bar in $theme_bars; do
         case "$ttype" in
-          d) polybar -q "$bar" -c "$PHOME"/"$theme"/config.ini &         ;;
-          f) polybar -q "$bar" -c "$PHOME/panels/panel/$subtheme.ini" &  ;;
+          d) config_file="$PHOME"/"$theme"/config.ini        ;;
+          f) config_file="$PHOME/panels/panel/$subtheme.ini" ;;
         esac
+        # start polybar
+        polybar -q "$bar" -c "$config_file" &
       done
     else
-        echo -e "${RED}Error! theme '$theme' not found.${RESET}"
+      error_msg+="${RED}Error! theme '$theme' not found.${RESET}"
     fi
+  fi
+
+  # is a file? AND had error loading theme? 
+  # try to run polybar
+  if [ -f "$theme" ] && [ -n "$error_msg" ]; then
+    # quit all polybar instances
+    pQuit
+    # run new config
+    polybar -c "$theme" "$bar" &
   else
-    # is a file? try to run polybar
-    if [ -f "$theme" ]; then
-      polybar -c "$theme" "$bar" &
-    else
-      # not a valid file either? Write error message
-      echo -e "${RED}Error! Themes isn't installed. Configfile '$theme' not found.${RESET}"
-    fi
+    # not a valid file either? Write error message
+    echo -e "${RED}Error! Themes isn't installed. Configfile '$theme' not found.${RESET}"
   fi
   
 }
