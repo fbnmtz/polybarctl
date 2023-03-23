@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/03/19 - 22:55:52
+# Last Modified: Thursday, 2023/03/23 - 18:40:10
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.15.403
+# Version: 0.0.16.458
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -186,4 +186,29 @@ pRun(){
     echo -e "${RED}Error! Themes isn't installed. Configfile '$theme' not found.${RESET}"
   fi
   
+}
+
+# show polybar status on system
+pStatus(){
+  count_themes(){
+    pList | grep -v 'Available' | wc -l
+  }
+
+  polybar_version(){
+    polybar -v | head -1 | cut -d ' ' -f2
+  }
+
+  pb_current_config(){
+    ps -aux | grep polybar | grep -v 'grep\|polybarctl' | aw 13
+  }
+  echo -e "${BLUE}
+  ############# POLYBARCTL #############\n\
+                  STATUS
+  
+  ${MAGENTA}polybar version.: ${YELLOW}$(polybar_version)${RESET}
+  ${MAGENTA}current config..: ${YELLOW}$(pb_current_config)${RESET}
+  ${MAGENTA}themes installed: ${YELLOW}$([ is_installed ] && echo -n true; echo " ($(count_themes))" || echo false) ${RESET}
+  ${BLUE}
+  #############    END    #############\
+  ${RESET}"
 }

@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:14:37
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/03/22 - 21:05:50
+# Last Modified: Thursday, 2023/03/23 - 18:40:26
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.6.63
+# Version: 0.0.7.70
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -35,6 +35,7 @@ xrequirements git polybar
 xarg --id -i,--install    --var action:i               --desc "install polybar themes (by adi1090x)"
 xarg --id -l,--list       --var action:l               --desc "list available themes"
 xarg --id -r,--run        --var action:r,theme+r,bar+o --desc "run one available <theme> or a given config_file (<bar> is optional when using a custom config file)"
+xarg --id -s,--status     --var action:s               --desc "show polybar status on system"
 xarg --id -q,--quit       --var action:q               --desc "quit all polybar instances"
 xarg --id -u,--uninstall  --var action:u               --desc "uninstall polybar themes"
 
@@ -48,6 +49,7 @@ case "$action" in
   i) pInstall      ;;
   l) pList         ;;
   r) pRun "$theme" ;;
+  s) pStatus       ;;
   u) pUninstall    ;;
   q) pQuit         ;;
 esac
