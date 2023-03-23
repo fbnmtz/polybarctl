@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:14:37
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/03/19 - 15:25:59
+# Last Modified: Wednesday, 2023/03/22 - 21:05:50
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.5.56
+# Version: 0.0.6.63
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -37,6 +37,8 @@ xarg --id -l,--list       --var action:l               --desc "list available th
 xarg --id -r,--run        --var action:r,theme+r,bar+o --desc "run one available <theme> or a given config_file (<bar> is optional when using a custom config file)"
 xarg --id -q,--quit       --var action:q               --desc "quit all polybar instances"
 xarg --id -u,--uninstall  --var action:u               --desc "uninstall polybar themes"
+
+xarg --header "Simple script to manage polybar and install/run themes created by @adi1090x"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 xrun --xreject-unknow --xrequire-one --xcolors --xversionrc "$@"
