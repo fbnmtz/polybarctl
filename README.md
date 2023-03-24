@@ -36,23 +36,25 @@ curl -sSL https://raw.githubusercontent.com/fbnmtz/polybarctl/master/install.sh 
 
 ## Usage:
 
-```
+```bash
 polybarctl -h
 
+Simple script to manage polybar and install/run themes created by @adi1090x
+
 usage:
-  polybarctl [-i] [-l] [-r <theme>] [-q] [-u] [-h] [-v]
+  polybarctl [-i] [-l] [-r <theme> <bar>] [-s] [-q] [-u] [-h] [-v]
 
 -> Available Options:
    -i,  --install           install polybar themes (by adi1090x)
    -l,  --list              list available themes
    -r,  --run <theme> <bar> run one available <theme> or a given config_file (<bar> is optional when using a custom config file)
+   -s,  --status            show polybar status on system
    -q,  --quit              quit all polybar instances
    -u,  --uninstall         uninstall polybar themes
    -h,  --help              show this help
    -v,  --version           print version and exit
 
-v0.0.5-rc56 - writen by @fbnmtz 2023
-
+v0.0.7-rc70 - writen by @fbnmtz 2023
 
 ```
 
