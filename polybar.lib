@@ -6,10 +6,10 @@
 # Created: Monday, 2023/03/06 - 01:29:51
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/03/23 - 18:40:10
+# Last Modified: Sunday, 2023/03/26 - 20:03:29
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.16.458
+# Version: 0.0.17.478
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -92,12 +92,17 @@ pList(){
 
 pUninstall(){
   if is_installed; then
+    # shellcheck disable=SC2155,SC2002 
+      # ignore declare and assign
+      # Useless cat. Consider 'cmd < file | ..' or 'cmd file | ..' instead.
     local toRemove=$(cat "$PHOME/polybarctl" | rev | cut -d '/' -f1 | rev)
     for item in $toRemove; do
       echo "rm -rf $PHOME/$item"
+      # shellcheck disable=2115 # Use \"${var:?}\" to ensure this never expands to / .
       rm -rf "$PHOME/$item"
     done
     for item in themes wallpapers polybarctl; do
+      # shellcheck disable=2115 # Use \"${var:?}\" to ensure this never expands to / .
       rm -rf "$PHOME/$item"
     done
     echo "$APP: themes uninstalled"
@@ -191,7 +196,7 @@ pRun(){
 # show polybar status on system
 pStatus(){
   count_themes(){
-    pList | grep -v 'Available' | wc -l
+    pList | grep -vc 'Available' 
   }
 
   polybar_version(){
@@ -199,6 +204,7 @@ pStatus(){
   }
 
   pb_current_config(){
+    # shellcheck disable=SC2009 # Useless cat. Consider 'cmd < file | ..' or 'cmd file | ..' instead.
     ps -aux | grep polybar | grep -v 'grep\|polybarctl' | aw 13
   }
   echo -e "${BLUE}
@@ -207,7 +213,7 @@ pStatus(){
   
   ${MAGENTA}polybar version.: ${YELLOW}$(polybar_version)${RESET}
   ${MAGENTA}current config..: ${YELLOW}$(pb_current_config)${RESET}
-  ${MAGENTA}themes installed: ${YELLOW}$([ is_installed ] && echo -n true; echo " ($(count_themes))" || echo false) ${RESET}
+  ${MAGENTA}themes installed: ${YELLOW}$(is_installed && echo -n true; echo " ($(count_themes))" || echo false) ${RESET}
   ${BLUE}
   #############    END    #############\
   ${RESET}"
